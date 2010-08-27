@@ -1,3 +1,5 @@
+php_value error_reporting 2047
+php_value date.timezone "Europe/Amsterdam"
 
 	RewriteEngine On
 	RewriteCond %{REQUEST_FILENAME} !-d
