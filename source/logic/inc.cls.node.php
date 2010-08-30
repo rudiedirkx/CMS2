@@ -1,6 +1,6 @@
 <?php
 
-class Node {
+class Node extends Page {
 
 	static public function load( $id, $object = true ) {
 		$node = $GLOBALS['db']->select('node_types t, nodes n', 't.id = n.node_type_id AND n.id = '.$id);
@@ -28,7 +28,11 @@ class Node {
 		}
 	}
 
-	public function render_node() {
+	public function render_as_block() {
+		return $this->render_as_node();
+	}
+
+	public function render_as_node() {
 		$node = $this;
 		include($this->node_template());
 	}
