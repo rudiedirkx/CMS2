@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 30 Aug 2010 om 18:10
+-- Genereertijd: 31 Aug 2010 om 23:16
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `node_type_id` (`node_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `nodes`
@@ -91,7 +91,8 @@ INSERT INTO `nodes` (`id`, `title`, `node_type_id`, `category_id`, `use_node_tem
 (7, 'Rudie', 3, NULL, '', ''),
 (8, 'Jaap', 3, NULL, '', ''),
 (9, 'Mieke', 3, NULL, '', ''),
-(10, 'Tilburg', 2, NULL, '', 'intro');
+(10, 'Tilburg', 2, NULL, '', 'intro'),
+(11, 'Binnenkort!! Dingen!!', 1, NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -114,7 +115,8 @@ CREATE TABLE IF NOT EXISTS `node_data_1` (
 
 INSERT INTO `node_data_1` (`node_id`, `teaser`, `body`, `publicationdate`, `ref_office`) VALUES
 (1, 'Berichtje 1', '<p>Het eerste berichtje bla bla bla</p>', '2010-08-26', 4),
-(2, 'Oele boele', '<p>Oeleboele<br>\r\nTralala<br>\r\nGekke japie<br>\r\nGekke jantje<br>\r\nGekke miep</p>\r\n<p>En ga zo maar door</p>', '2010-08-27', 3);
+(2, 'Oele boele', '<p>Oeleboele<br>\r\nTralala<br>\r\nGekke japie<br>\r\nGekke jantje<br>\r\nGekke miep</p>\r\n<p>En ga zo maar door</p>', '2010-08-27', 3),
+(11, 'Binnenkort ;) Nieuwe dingen in de hizzouse', '<p>Binnenkort dit en dat bla bla</p>', '2010-09-06', NULL);
 
 -- --------------------------------------------------------
 
@@ -166,18 +168,20 @@ INSERT INTO `node_data_3` (`node_id`, `birthdate`, `ref_supervisor`, `ref_office
 
 CREATE TABLE IF NOT EXISTS `node_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `node_type` varchar(40) NOT NULL,
   `node_type_name` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `node_type` (`node_type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_types`
 --
 
-INSERT INTO `node_types` (`id`, `node_type_name`) VALUES
-(1, 'Nieuws'),
-(2, 'Office'),
-(3, 'Person');
+INSERT INTO `node_types` (`id`, `node_type`, `node_type_name`) VALUES
+(1, 'nieuws', 'Nieuws'),
+(2, 'office', 'Office'),
+(3, 'person', 'Person');
 
 -- --------------------------------------------------------
 
@@ -196,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `node_type_fields` (
   `input_format` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type_id` (`node_type_id`,`field_machine_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=8 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_type_fields`
@@ -285,19 +289,19 @@ INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`) V
 --
 
 CREATE TABLE IF NOT EXISTS `url_paths` (
-  `url_path` varchar(250) NOT NULL,
-  `node_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`url_path`),
-  KEY `node_id` (`node_id`)
+  `from_url_path` varchar(250) NOT NULL,
+  `to_url_path` varchar(250) NOT NULL,
+  PRIMARY KEY (`from_url_path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `url_paths`
 --
 
-INSERT INTO `url_paths` (`url_path`, `node_id`) VALUES
-('/rudie', 7),
-('/joris', 6);
+INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
+('/rudie', '/node/7'),
+('/joris', '/node/6'),
+('404', '/node/1');
 
 -- --------------------------------------------------------
 
@@ -327,7 +331,7 @@ INSERT INTO `users` (`id`, `username`) VALUES
 CREATE TABLE IF NOT EXISTS `views` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `view_name` varchar(40) NOT NULL,
-  `url_path` varchar(250) NOT NULL,
+  `url_path` varchar(250) DEFAULT NULL,
   `details` text NOT NULL,
   `node_type_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
@@ -339,4 +343,4 @@ CREATE TABLE IF NOT EXISTS `views` (
 --
 
 INSERT INTO `views` (`id`, `view_name`, `url_path`, `details`, `node_type_id`) VALUES
-(1, 'Nieuws', '/nieuws', 'publicationdate > DATE(NOW()) ORDER BY publicationdate DESC', 1);
+(1, 'Nieuws', '/nieuws', 'SELECT * FROM nodes n, node_data_1 nd WHERE nd.node_id = n.id AND nd.publicationdate > DATE(NOW()) ORDER BY nd.publicationdate DESC;', 1);
