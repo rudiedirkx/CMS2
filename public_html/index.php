@@ -17,15 +17,9 @@ foreach ( $routes AS $r ) {
 	}
 }
 
-if ( 0 < preg_match('#^/node/(\d+)/?#', $szUrlPath, $parrMatches) ) {
-	$node = (int)$parrMatches[1];
-}
-else if ( ($page = $db->select('url_paths', "url_path = '".$db->escape($szUrlPath)."'")) ) {
-	$node = (int)$page[0]->node_id;
-	$url_path[] = '/node/'.$node;
-}
-if ( empty($node) ) {
-	exit('404');
+if ( ($page = $db->select('url_paths', "from_url_path = '".$db->escape($szUrlPath)."'")) ) {
+	$szUrlPath = $page[0]->to_url_path;
+	$url_path[] = $szUrlPath;
 }
 
 require_once('../source/logic/inc.cls.page.php');
@@ -34,7 +28,19 @@ require_once('../source/logic/inc.cls.block.php');
 require_once('../source/logic/inc.cls.user.php');
 require_once('../source/logic/inc.cls.view.php');
 
-$page = node::load($node);
+if ( 0 < preg_match('#^/node/(\d+)/?#', $szUrlPath, $parrMatches) ) {
+	$page = node::load((int)$parrMatches[1]);
+}
+else if ( 0 < preg_match('#^/user/(\d+)/?#', $szUrlPath, $parrMatches) ) {
+	$page = user::load((int)$parrMatches[1]);
+}
+else if ( 0 < preg_match('#^/view/(\d+)/?#', $szUrlPath, $parrMatches) ) {
+	$page = view::load((int)$parrMatches[1]);
+}
+else {
+	exit('404');
+}
+
 $page->render_as_page($page);
 
 

@@ -7,6 +7,8 @@
 * { margin:0; padding:0; }
 body { padding:10px; }
 div { padding:10px; border:solid 2px green; }
+div.node div.content { background:#faa; }
+div.node div.title { background:#afa; }
 #header, #footer { background:pink; }
 </style>
 </head>
