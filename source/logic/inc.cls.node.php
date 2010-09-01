@@ -10,6 +10,16 @@ class Node extends Page {
 		return false;
 	}
 
+	static public $__fields;
+
+	static public function fields( $type ) {
+		if ( empty(self::$__fields[$type]) ) {
+#			self::$__fields[$type] = $GLOBALS['db']->select_fields('node_type_fields', 'field_machine_name, field_title', 'node_type_id = '.$type);
+			self::$__fields[$type] = $GLOBALS['db']->select_by_field('node_type_fields', 'field_machine_name', 'node_type_id = '.$type);
+		}
+		return self::$__fields[$type];
+	}
+
 	public $_fields = array();
 
 	public function __construct( $data ) {
@@ -18,13 +28,22 @@ class Node extends Page {
 		}
 		$this->extend((array)$data);
 		if ( empty($this->node_id) ) {
-			if ( ($md = $GLOBALS['db']->select('node_data_'.$this->node_type_id, 'node_id = '.$this->id)) ) {
-//				$this->_fields = array_keys((array)$md[0]);
-//				array_shift($this->_fields);
-				$this->_fields = $GLOBALS['db']->select_fields('node_type_fields', 'field_machine_name, field_title', 'node_type_id = '.$this->node_type_id);
+			$md = $GLOBALS['db']->select('node_data_'.$this->node_type_id, 'node_id = '.$this->id);
+			if ( $md ) {
 				$this->extend($md[0]);
 			}
 			$this->node_id = $this->id;
+		}
+		$this->save_fields();
+	}
+
+	public function save_fields() {
+		$this->_fields = self::fields($this->node_type_id);
+		foreach ( $this->_fields AS $k => $f ) {
+			if ( in_array(strtolower($f->field_type), array('dateandtime', 'date', 'time')) ) {
+				$c = $f->field_type;
+				$this->$k = new $c($this->$k);
+			}
 		}
 	}
 
@@ -38,7 +57,7 @@ class Node extends Page {
 	}
 
 	public function node_templates() {
-		$templates = array('node-'.$this->id, 'node-type-'.$this->node_type_id, 'node');
+		$templates = array('node-'.$this->id, 'node-type-'.$this->node_type, 'node');
 		return $templates;
 	}
 

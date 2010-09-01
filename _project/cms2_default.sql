@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 31 Aug 2010 om 23:16
+-- Genereertijd: 01 Sept 2010 om 17:56
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `node_type_fields` (
 INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `field_title`, `field_description`, `field_type`, `mandatory`, `input_format`) VALUES
 (1, 1, 'teaser', 'Teaser', 'A few words about this post', 'string', 1, ''),
 (2, 1, 'body', 'Body', 'The actual content', 'html', 1, ''),
-(3, 1, 'publication_date', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, ''),
+(3, 1, 'publicationdate', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, ''),
 (4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2'),
 (5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, ''),
 (6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3'),
@@ -301,7 +301,10 @@ CREATE TABLE IF NOT EXISTS `url_paths` (
 INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
 ('/rudie', '/node/7'),
 ('/joris', '/node/6'),
-('404', '/node/1');
+('404', '/node/1'),
+('/nieuws', '/view/1'),
+('/root', '/user/1'),
+('/user/root', '/user/1');
 
 -- --------------------------------------------------------
 
@@ -312,6 +315,8 @@ INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(60) NOT NULL,
+  `created_on` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -319,8 +324,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Gegevens worden uitgevoerd voor tabel `users`
 --
 
-INSERT INTO `users` (`id`, `username`) VALUES
-(1, 'rudie');
+INSERT INTO `users` (`id`, `username`, `created_on`, `created_by`) VALUES
+(1, 'rudie', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -331,16 +336,18 @@ INSERT INTO `users` (`id`, `username`) VALUES
 CREATE TABLE IF NOT EXISTS `views` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `view_name` varchar(40) NOT NULL,
-  `url_path` varchar(250) DEFAULT NULL,
+  `result_type` enum('node','user') NOT NULL DEFAULT 'node',
   `details` text NOT NULL,
   `node_type_id` int(10) unsigned NOT NULL,
+  `dont_wrap` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `node_type_id` (`node_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `views`
 --
 
-INSERT INTO `views` (`id`, `view_name`, `url_path`, `details`, `node_type_id`) VALUES
-(1, 'Nieuws', '/nieuws', 'SELECT * FROM nodes n, node_data_1 nd WHERE nd.node_id = n.id AND nd.publicationdate > DATE(NOW()) ORDER BY nd.publicationdate DESC;', 1);
+INSERT INTO `views` (`id`, `view_name`, `result_type`, `details`, `node_type_id`, `dont_wrap`) VALUES
+(1, 'Nieuws', 'node', 'SELECT * FROM nodes n, node_data_1 nd WHERE nd.node_id = n.id AND nd.publicationdate > DATE(NOW()) ORDER BY nd.publicationdate DESC;', 1, 0),
+(2, 'Newest user', 'node', 'SELECT * FROM users ORDER BY created_on DESC LIMIT 1', 0, 1);

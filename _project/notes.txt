@@ -1,0 +1,14 @@
+Field types:
+- int
+- sint
+- float
+- sfloat
+- string
+- text
+- html
+- date
+- time
+- dateandtime
+- file
+- image
+

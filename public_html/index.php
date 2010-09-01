@@ -1,6 +1,6 @@
 <?php
 
-define('CMS2_TEMPLATE_DIR', '../templates');
+define('CMS2_TEMPLATE_DIR', '../templates/default');
 
 require_once('../source/include/mvc3/source/include/models/db/inc.cls.db_mysqli.php');
 $db = new db_mysqli('localhost', 'cms2', 'cms2', 'cms2_default');
@@ -27,6 +27,7 @@ require_once('../source/logic/inc.cls.node.php');
 require_once('../source/logic/inc.cls.block.php');
 require_once('../source/logic/inc.cls.user.php');
 require_once('../source/logic/inc.cls.view.php');
+require_once('../source/logic/inc.cls.datetime.php');
 
 if ( 0 < preg_match('#^/node/(\d+)/?#', $szUrlPath, $parrMatches) ) {
 	$page = node::load((int)$parrMatches[1]);
@@ -41,6 +42,7 @@ else {
 	exit('404');
 }
 
+$page->is_page = true;
 $page->render_as_page($page);
 
 
