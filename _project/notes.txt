@@ -1,3 +1,18 @@
+Needed methods:
+- node.render_as_page
+- node.render_in_page
+- node.render_in_block
+- node.render_in_view
+
+- view.render_as_page
+- view.render_in_page
+- view.render_in_block
+
+- user.render_as_page
+- user.render_in_page
+- user.render_in_view
+
+
 Field types:
 - int
 - sint

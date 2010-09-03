@@ -1,15 +1,11 @@
 <?php
 
-class Block {
+class Block extends Renderable {
 
 	static public function load( $block ) {
 		if ( is_object($block) ) {
 			return new self($block);
 		}
-#		$block = $GLOBALS['db']->select('block', 'id = '.(int)$block);
-#		if ( $block ) {
-#			return new self($block[0]);
-#		}
 		return false;
 	}
 

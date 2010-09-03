@@ -1,6 +1,6 @@
 <?php
 
-class User {
+class User extends Page {
 
 	public $user;
 
@@ -15,31 +15,27 @@ class User {
 		return new self($user);
 	}
 
-	public function __construct( $user ) {
-		$this->user = $user;
-	}
 
-	public function render_as_block() {
-		return $this->render();
-	}
-
-	public function render() {
-		$user = $this->user;
-		include($this->user_template());
-	}
-
-	public function user_templates() {
-		return array('user');
-	}
-
-	public function user_template( $dir = CMS2_TEMPLATE_DIR ) {
-		$templates = $this->user_templates();
-		foreach ( $templates AS $t ) {
-			if ( file_exists($f=$dir.'/'.$t.'.tpl.php') ) {
-				return $f;
-			}
+	public function __construct( $data = null ) {
+		if ( null !== $data ) {
+			$this->extend((array)$data);
 		}
-		return false;
+		$this->title = $this->username;
+	}
+
+
+	public function render_in_page() {
+		$user = $this;
+		include($this->in_page_template());
+	}
+	public function render_in_view() {
+		return $this->render_in_page();
+	}
+
+
+	public function in_page_templates() {
+		$templates = array('user');
+		return $templates;
 	}
 
 }

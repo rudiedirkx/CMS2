@@ -1,8 +1,6 @@
 <?php
 
-class Page {
-
-#	public $content;
+class Page extends Renderable {
 
 	public function render_region( $region ) {
 		// Fetch regions (how?) and render them (like _page and _node)
@@ -16,24 +14,30 @@ class Page {
 		}
 	}
 
-	public function render_as_page( $content ) {
-#		$this->content = $content;
-		$page = $this;
-		include($this->page_template());
+
+	public function in_page_template( $dir = CMS2_TEMPLATE_DIR ) {
+		$templates = $this->in_page_templates();
+		return $this->find_template($dir, $templates);
 	}
 
-	public function page_templates() {
+
+	public function render_as_page() {
+		$page = $this;
+		include($this->as_page_template());
+	}
+	public function as_page_template( $dir = CMS2_TEMPLATE_DIR ) {
+		$templates = $this->as_page_templates();
+		return $this->find_template($dir, $templates);
+	}
+	public function as_page_templates() {
 		return array('page');
 	}
 
-	public function page_template( $dir = CMS2_TEMPLATE_DIR ) {
-		$templates = $this->page_templates();
-		foreach ( $templates AS $t ) {
-			if ( file_exists($f=$dir.'/'.$t.'.tpl.php') ) {
-				return $f;
-			}
+
+	public function extend( $data ) {
+		foreach ( (array)$data AS $k => $v ) {
+			$this->$k = $v;
 		}
-		return false;
 	}
 
 }

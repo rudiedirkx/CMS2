@@ -1,1 +1,6 @@
 Another approach to the CMS deal. More like Drupal, but much, much easier (hopefully).
+
+Standard in this CMS:
+ - Drupal's Context module
+ - Drupal's full CCK module + all standard fields
+ - Drupal's Views module (simplified, mandatory templates, fewer settings)

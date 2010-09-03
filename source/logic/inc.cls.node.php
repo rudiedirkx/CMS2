@@ -22,11 +22,13 @@ class Node extends Page {
 
 	public $_fields = array();
 
-	public function __construct( $data ) {
-		if ( is_scalar($data) ) {
-			return $this->__construct(self::load($data, false));
+	public function __construct( $data = null ) {
+		if ( null !== $data ) {
+			if ( is_scalar($data) ) {
+				return $this->__construct(self::load($data, false));
+			}
+			$this->extend((array)$data);
 		}
-		$this->extend((array)$data);
 		if ( empty($this->node_id) ) {
 			$md = $GLOBALS['db']->select('node_data_'.$this->node_type_id, 'node_id = '.$this->id);
 			if ( $md ) {
@@ -47,29 +49,23 @@ class Node extends Page {
 		}
 	}
 
-	public function render_as_block() {
-		return $this->render_as_node();
+	public function render_in_view() {
+		return $this->render_in_page();
 	}
-
-	public function render_as_node() {
+	public function render_in_block() {
+		return $this->render_in_page();
+	}
+	public function render_in_page() {
 		$node = $this;
-		include($this->node_template());
+		include($this->in_page_template());
 	}
 
-	public function node_templates() {
+
+	public function in_page_templates() {
 		$templates = array('node-'.$this->id, 'node-type-'.$this->node_type, 'node');
 		return $templates;
 	}
 
-	public function node_template( $dir = CMS2_TEMPLATE_DIR ) {
-		$templates = $this->node_templates();
-		foreach ( $templates AS $t ) {
-			if ( file_exists($f=$dir.'/'.$t.'.tpl.php') ) {
-				return $f;
-			}
-		}
-		return false;
-	}
 
 	public function __get( $k ) {
 		if ( !property_exists($this, $k) ) {
@@ -81,12 +77,6 @@ class Node extends Page {
 			}
 		}
 		return $this->$k;
-	}
-
-	public function extend( $data ) {
-		foreach ( (array)$data AS $k => $v ) {
-			$this->$k = $v;
-		}
 	}
 
 }

@@ -22,6 +22,7 @@ if ( ($page = $db->select('url_paths', "from_url_path = '".$db->escape($szUrlPat
 	$url_path[] = $szUrlPath;
 }
 
+require_once('../source/logic/inc.cls.renderable.php');
 require_once('../source/logic/inc.cls.page.php');
 require_once('../source/logic/inc.cls.node.php');
 require_once('../source/logic/inc.cls.block.php');
@@ -43,6 +44,6 @@ else {
 }
 
 $page->is_page = true;
-$page->render_as_page($page);
+$page->render_as_page();
 
 
