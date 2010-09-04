@@ -1,3 +1,4 @@
+
 <div class="<?if($node->is_page):?>node-is-page <?endif?>node-<?=$node->id?> node content-node node-type-<?=$node->node_type?> content-node-<?=$node->node_type?>">
 	<div class="title"><h2><?=$node->title?> (<?=$node->node_type_name?>)</h2></div>
 	<div class="content">

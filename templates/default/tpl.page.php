@@ -20,7 +20,7 @@ div.node div.title { background:#afa; }
 <div id="wrapper">
 
 <div class="region" id="header">
-	<?//$page->render_region('header')?>
+	<?$page->render_region('header')?>
 </div>
 
 <div class="region" id="content">
@@ -28,7 +28,7 @@ div.node div.title { background:#afa; }
 </div>
 
 <div class="region" id="footer">
-	<?//$page->render_region('footer')?>
+	<?$page->render_region('footer')?>
 </div>
 
 </div>

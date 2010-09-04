@@ -19,9 +19,8 @@ class View extends Page {
 
 
 	public function render_in_page() {
-		$view = $this;
 		$results = $GLOBALS['db']->fetch($this->details, $this->result_type);
-		include($this->in_page_template());
+		renderable::render_with_vars( $this->in_page_template(), array('view' => $this, 'results' => $results) );
 	}
 	public function render_in_block() {
 		return $this->render_in_page();

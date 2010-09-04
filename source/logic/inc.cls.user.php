@@ -24,12 +24,14 @@ class User extends Page {
 	}
 
 
-	public function render_in_page() {
-		$user = $this;
-		include($this->in_page_template());
-	}
 	public function render_in_view() {
 		return $this->render_in_page();
+	}
+	public function render_in_block() {
+		return $this->render_in_page();
+	}
+	public function render_in_page() {
+		renderable::render_with_vars( $this->in_page_template(), array('user' => $this) );
 	}
 
 

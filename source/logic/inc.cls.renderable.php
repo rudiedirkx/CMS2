@@ -18,6 +18,12 @@ class Renderable {
 		return $this->$k;
 	}
 
+
+	static public function render_with_vars( $tpl, $vars ) {
+		extract($vars);
+		include($tpl);
+	}
+
 }
 
 

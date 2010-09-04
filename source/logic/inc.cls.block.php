@@ -22,8 +22,7 @@ class Block extends Renderable {
 
 	public function render() {
 		$source = $this->source();
-		$source->render_as_block();
-//		include($this->block_template());
+		$source->render_in_block();
 	}
 
 	public function block_templates() {

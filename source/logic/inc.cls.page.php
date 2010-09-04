@@ -22,8 +22,7 @@ class Page extends Renderable {
 
 
 	public function render_as_page() {
-		$page = $this;
-		include($this->as_page_template());
+		renderable::render_with_vars( $this->as_page_template(), array('page' => $this) );
 	}
 	public function as_page_template( $dir = CMS2_TEMPLATE_DIR ) {
 		$templates = $this->as_page_templates();

@@ -56,8 +56,7 @@ class Node extends Page {
 		return $this->render_in_page();
 	}
 	public function render_in_page() {
-		$node = $this;
-		include($this->in_page_template());
+		renderable::render_with_vars( $this->in_page_template(), array('node' => $this) );
 	}
 
 
