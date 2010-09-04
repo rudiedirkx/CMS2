@@ -22,7 +22,7 @@ require_once( PROJECT_CONTROLLERS.'/inc.cls.__topmodule.php' );
 
 
 // Fetch request URI
-$g_szRequestUri = __TopModule::getRequestUri();
+$url = __TopModule::getRequestUri();
 
 
 // Save db layer
@@ -34,11 +34,11 @@ $user = new User;
 
 
 try {
-	$application = __TopModule::run( $g_szRequestUri );
+	$application = __TopModule::run( $url );
 	$application->exec();
 }
 catch ( InvalidURIException $ex ) {
-	exit('['.date('Y-m-d H:i:s').'] Page not found: '.$g_szRequestUri);
+	exit('['.date('Y-m-d H:i:s').'] Page not found: '.$url);
 }
 catch ( AROException $ex ) {
 	exit('['.date('Y-m-d H:i:s').'] Model error: '.$ex->getMessage());

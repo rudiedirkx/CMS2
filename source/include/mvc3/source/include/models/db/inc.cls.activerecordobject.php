@@ -35,7 +35,7 @@ abstract class ActiveRecordObject {
 
 	// Semi-static functions
 	public function insert( $data ) {
-		$this->getDbObject()->insett( $this->getTableName(), $data );
+		$this->getDbObject()->insert( $this->getTableName(), $data );
 	}
 
 	public function replace( $data ) {

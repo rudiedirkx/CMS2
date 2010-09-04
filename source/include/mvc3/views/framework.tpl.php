@@ -12,6 +12,14 @@
 
 <body>
 
+<div id="header">
+	<ul>
+		<li><a href="/admin/">Admin</a></li>
+		<li><a href="/admin/content">Content</a></li>
+		<li><a href="/admin/content/types">Node types</a></li>
+	</ul>
+</div>
+
 <?=$_szHtmlContents?>
 
 </body>
