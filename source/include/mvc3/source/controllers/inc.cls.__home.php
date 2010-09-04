@@ -1,10 +1,12 @@
 <?php
 
-class __Home extends __TopModule
+class __Home extends __Actual_TopModule
 {
 
 	protected $m_arrHooks = array(
 		'/'					=> 'index',
+		'/login'			=> 'loginForm',
+		'/login/do'			=> 'loginProcess',
 	);
 
 
@@ -14,31 +16,15 @@ class __Home extends __TopModule
 	 */
 	protected function index()
 	{
-		function pd( $fs ) {
-			echo '<ul>';
-			foreach ( $fs AS $f ) {
-				if ( is_dir($f) || 0 < preg_match('/^inc\.cls\.mod_([0-9a-z_]+)\.php$/', basename($f), $parrMatches) ) {
-					$c = explode('/', substr($f, strlen(PROJECT_CONTROLLERS)+1));
-					if ( !is_dir($f) ) {
-						$c[count($c)-1] = $parrMatches[1];
-					}
-					echo '<li><a title="'.$f.'" href="'.str_replace('-N', '-'.rand(1, 3545), implode('-', $c)).'">'.basename($f).'</a>';
-					if ( is_dir($f) ) {
-						echo '<ul>';
-						pd(glob($f.'/*'));
-						echo '</ul>';
-					}
-					echo '</li>';
-				}
-			}
-			echo '</ul>';
+		if ( $this->user->logincheck() ) {
+			header('Location: /admin/content');
+			exit;
 		}
-
-		pd(glob(PROJECT_CONTROLLERS.'/*'));
+		return $this->loginForm();
 
 	} // END index() */
 
 
 } // END Class __Home
 
-?>
+

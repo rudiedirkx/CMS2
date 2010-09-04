@@ -11,9 +11,9 @@
 </head>
 
 <body>
-<table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" height="100%">
-<tr valign="middle"><td align="center"><?=$_szHtmlContents?></td></tr>
-</table>
+
+<?=$_szHtmlContents?>
+
 </body>
 
 </html>

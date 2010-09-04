@@ -1,9 +1,11 @@
 <?php
 
+define( 'CMS2_SCRIPT_ROOT', dirname(dirname(__FILE__)) );
+define( 'CMS2_MVC3_ROOT', CMS2_SCRIPT_ROOT.'/source/include/mvc3' );
+
 define('CMS2_TEMPLATE_DIR', '../templates/default');
 
-require_once('../source/include/mvc3/source/include/models/db/inc.cls.db_mysqli.php');
-$db = new db_mysqli('localhost', 'cms2', 'cms2', 'cms2_default');
+require_once('cfg_db.php');
 
 $szUrlPath = reset(explode('?', $_SERVER['REQUEST_URI'], 2));
 $url_path = array($szUrlPath);

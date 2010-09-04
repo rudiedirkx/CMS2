@@ -16,8 +16,8 @@ class Template {
 
 	public $tpl;
 
-	public function __construct() {
-		$this->tpl = new TemplateEngine('./templates');
+	public function __construct( $dir = './templates' ) {
+		$this->tpl = new TemplateEngine($dir);
 	}
 
 	public function assign() {
@@ -30,7 +30,7 @@ class Template {
 		return call_user_func_array(array($this->tpl, 'fetch'), $args);
 	}
 
-	public function display( $tpl, $frame = 'framework.tpl.html' ) {
+	public function display( $tpl, $frame = 'framework.tpl.php' ) {
 		if ( !$this->tpl->exists('_szHtmlTitle') ) {
 			$this->tpl->assign('_szHtmlTitle', '');
 		}
