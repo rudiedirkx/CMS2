@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 01 Sept 2010 om 17:56
+-- Genereertijd: 05 Sept 2010 om 22:15
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `blocks` (
   `type` enum('view','node','user') NOT NULL,
   `content_source_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `blocks`
@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS `blocks` (
 
 INSERT INTO `blocks` (`id`, `name`, `type`, `content_source_id`) VALUES
 (1, 'news', 'node', 4),
-(2, 'some user', 'user', 1);
+(2, 'some user', 'user', 1),
+(3, 'willekeurig nieuwsbericht', 'view', 3);
 
 -- --------------------------------------------------------
 
@@ -75,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `node_type_id` (`node_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `nodes`
@@ -92,7 +93,10 @@ INSERT INTO `nodes` (`id`, `title`, `node_type_id`, `category_id`, `use_node_tem
 (8, 'Jaap', 3, NULL, '', ''),
 (9, 'Mieke', 3, NULL, '', ''),
 (10, 'Tilburg', 2, NULL, '', 'intro'),
-(11, 'Binnenkort!! Dingen!!', 1, NULL, '', '');
+(11, 'Binnenkort!! Dingen!!', 1, NULL, '', ''),
+(12, 'Meer nieuwe dingen', 1, NULL, '', ''),
+(13, 'Wow dit gebeurt nog lange niet :)', 1, NULL, '', ''),
+(14, 'INDEX', 4, NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -116,7 +120,9 @@ CREATE TABLE IF NOT EXISTS `node_data_1` (
 INSERT INTO `node_data_1` (`node_id`, `teaser`, `body`, `publicationdate`, `ref_office`) VALUES
 (1, 'Berichtje 1', '<p>Het eerste berichtje bla bla bla</p>', '2010-08-26', 4),
 (2, 'Oele boele', '<p>Oeleboele<br>\r\nTralala<br>\r\nGekke japie<br>\r\nGekke jantje<br>\r\nGekke miep</p>\r\n<p>En ga zo maar door</p>', '2010-08-27', 3),
-(11, 'Binnenkort ;) Nieuwe dingen in de hizzouse', '<p>Binnenkort dit en dat bla bla</p>', '2010-09-06', NULL);
+(11, 'Binnenkort ;) Nieuwe dingen in de hizzouse', '<p>Binnenkort dit en dat bla bla</p>', '2010-09-06', NULL),
+(12, 'Nieuwz', '<p>Dit is alemaal nieuwsszz</p>', '2010-09-08', NULL),
+(13, 'In de verre toekomst...', 'Haha misschien ben jij wel dood dan!', '2010-11-17', NULL);
 
 -- --------------------------------------------------------
 
@@ -133,6 +139,11 @@ CREATE TABLE IF NOT EXISTS `node_data_2` (
 -- Gegevens worden uitgevoerd voor tabel `node_data_2`
 --
 
+INSERT INTO `node_data_2` (`node_id`) VALUES
+(3),
+(4),
+(5),
+(10);
 
 -- --------------------------------------------------------
 
@@ -163,6 +174,62 @@ INSERT INTO `node_data_3` (`node_id`, `birthdate`, `ref_supervisor`, `ref_office
 -- --------------------------------------------------------
 
 --
+-- Tabelstructuur voor tabel `node_data_4`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data_4` (
+  `node_id` int(10) unsigned NOT NULL,
+  `body` text NOT NULL,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `node_data_4`
+--
+
+INSERT INTO `node_data_4` (`node_id`, `body`) VALUES
+(14, '<p>Dit is de index!</p>');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `node_data_5`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data_5` (
+  `node_id` int(10) unsigned NOT NULL,
+  `supplier` int(11) DEFAULT NULL,
+  `colors` text NOT NULL,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `node_data_5`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `node_data_6`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data_6` (
+  `node_id` int(10) unsigned NOT NULL,
+  `right_content` text NOT NULL,
+  `top_image` varchar(250) DEFAULT NULL,
+  `right_image` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `node_data_6`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Tabelstructuur voor tabel `node_types`
 --
 
@@ -172,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `node_types` (
   `node_type_name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type` (`node_type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_types`
@@ -181,7 +248,10 @@ CREATE TABLE IF NOT EXISTS `node_types` (
 INSERT INTO `node_types` (`id`, `node_type`, `node_type_name`) VALUES
 (1, 'nieuws', 'Nieuws'),
 (2, 'office', 'Office'),
-(3, 'person', 'Person');
+(3, 'person', 'Person'),
+(4, 'page', 'Page'),
+(5, 'product', 'Les Productos'),
+(6, 'right_page', 'Right Page');
 
 -- --------------------------------------------------------
 
@@ -198,22 +268,29 @@ CREATE TABLE IF NOT EXISTS `node_type_fields` (
   `field_type` varchar(40) NOT NULL,
   `mandatory` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `input_format` text NOT NULL,
+  `o` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type_id` (`node_type_id`,`field_machine_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=14 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_type_fields`
 --
 
-INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `field_title`, `field_description`, `field_type`, `mandatory`, `input_format`) VALUES
-(1, 1, 'teaser', 'Teaser', 'A few words about this post', 'string', 1, ''),
-(2, 1, 'body', 'Body', 'The actual content', 'html', 1, ''),
-(3, 1, 'publicationdate', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, ''),
-(4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2'),
-(5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, ''),
-(6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3'),
-(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 0, 'node_types=2');
+INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `field_title`, `field_description`, `field_type`, `mandatory`, `input_format`, `o`) VALUES
+(1, 1, 'teaser', 'Teaser', 'A few words about this post', 'string', 1, '', 0),
+(2, 1, 'body', 'Body', 'The actual content', 'html', 1, '', 0),
+(3, 1, 'publicationdate', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, '', 0),
+(4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2', 0),
+(5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, '', 0),
+(6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3', 0),
+(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 0, 'node_types=2', 0),
+(8, 4, 'body', 'Body', 'The entire page', 'html', 1, '', 0),
+(9, 5, 'supplier', 'Supplier (shop)', '--none--', 'reference', 0, 'node_types=supplier', 0),
+(10, 5, 'colors', 'Colors (1 per line)', '', 'multistring', 1, '-', 0),
+(11, 6, 'right_content', 'Right Content', '--none--', 'html', 1, 'isdjvp0isw', 0),
+(12, 6, 'top_image', 'Top image', '--none--', 'image', 0, 'crop=500*200\r\nextensions=jpg,gif,png', 0),
+(13, 6, 'right_image', 'Right image', '--none--', 'image', 0, 'crop=200*500\r\nextensions=jpg,gif,png', 0);
 
 -- --------------------------------------------------------
 
@@ -236,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `regioned_blocks` (
 
 INSERT INTO `regioned_blocks` (`region_id`, `block_id`, `o`, `condition_type`, `condition_value`) VALUES
 (1, 1, 0, 'always', ''),
-(1, 2, 0, 'always', ''),
+(1, 3, 1, 'always', ''),
 (2, 2, 0, 'always', '');
 
 -- --------------------------------------------------------
@@ -280,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `routes` (
 --
 
 INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`) VALUES
-(1, '#^/$#', '/node/2', 1, 0);
+(1, '#^/$#', '/node/14', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -335,19 +412,20 @@ INSERT INTO `users` (`id`, `username`, `created_on`, `created_by`) VALUES
 
 CREATE TABLE IF NOT EXISTS `views` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `view_name` varchar(40) NOT NULL,
+  `title` varchar(40) NOT NULL,
   `result_type` enum('node','user') NOT NULL DEFAULT 'node',
   `details` text NOT NULL,
   `node_type_id` int(10) unsigned NOT NULL,
   `dont_wrap` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `node_type_id` (`node_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `views`
 --
 
-INSERT INTO `views` (`id`, `view_name`, `result_type`, `details`, `node_type_id`, `dont_wrap`) VALUES
-(1, 'Nieuws', 'node', 'SELECT * FROM nodes n, node_data_1 nd WHERE nd.node_id = n.id AND nd.publicationdate > DATE(NOW()) ORDER BY nd.publicationdate DESC;', 1, 0),
-(2, 'Newest user', 'node', 'SELECT * FROM users ORDER BY created_on DESC LIMIT 1', 0, 1);
+INSERT INTO `views` (`id`, `title`, `result_type`, `details`, `node_type_id`, `dont_wrap`) VALUES
+(1, 'Nieuws', 'node', 'SELECT * FROM node_types t, nodes n, node_data_1 nd WHERE t.id = n.node_type_id AND nd.node_id = n.id AND nd.publicationdate > DATE(NOW()) ORDER BY nd.publicationdate DESC;', 1, 0),
+(2, 'Newest user', 'user', 'SELECT * FROM users ORDER BY created_on DESC LIMIT 1', 0, 1),
+(3, 'Willekeurig nieuwsbericht', 'node', 'SELECT * FROM node_types t, nodes n, node_data_1 nd WHERE t.id = n.node_type_id AND nd.node_id = n.id ORDER BY RAND() LIMIT 1;', 1, 0);

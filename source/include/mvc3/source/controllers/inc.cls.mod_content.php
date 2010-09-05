@@ -14,23 +14,23 @@ class Mod_Content extends Main_Inside
 		'time'			=> array('Time', 'TIME'),
 		'dateandtime'	=> array('Date & Time', 'INTEGER'),
 		'file'			=> array('File', 'VARCHAR(250)'),
-		'image'			=> array('image', 'VARCHAR(250)'),
+		'image'			=> array('Image', 'VARCHAR(250)'),
 		'reference'		=> array('Node reference', 'INTEGER'),
 	);
 
 	protected $m_arrHooks = array(
 		'/'							=> 'content',
-		'/by-type/#'				=> 'content',
+		'/by-type/*'				=> 'content',
 
 		'/types/add'				=> 'addNodeType',
 		'/types/add/save'			=> 'saveNodeType',
 
 		'/types'					=> 'listContentTypes',
-		'/type/#'					=> 'contentType',
-		'/type/#/edit'				=> 'editContentType',
-		'/type/#/edit/save'			=> 'saveContentType',
-		'/type/#/add-field'			=> 'addContentTypeField',
-		'/type/#/add-field/save'	=> 'saveContentTypeField',
+		'/type/*'					=> 'contentType',
+		'/type/*/edit'				=> 'editContentType',
+		'/type/*/edit/save'			=> 'saveContentType',
+		'/type/*/add-field'			=> 'addContentTypeField',
+		'/type/*/add-field/save'	=> 'saveContentTypeField',
 	);
 
 
@@ -40,6 +40,8 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function saveContentTypeField( $ct )
 	{
+		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
+
 		$this->mf_RequirePostVars(array(
 			'field_title' => 'Field title',
 			'field_machine_name' => 'Field machine name',
@@ -64,7 +66,7 @@ class Mod_Content extends Main_Inside
 		}
 
 		$arrInsert = array(
-			'node_type_id' => $ct,
+			'node_type_id' => $ct->id,
 			'field_title' => trim($_POST['field_title']),
 			'field_machine_name' => strtolower($_POST['field_machine_name']),
 			'field_type' => strtolower($_POST['field_type']),
@@ -74,9 +76,9 @@ class Mod_Content extends Main_Inside
 		);
 
 		ARONodeTypeField::finder()->insert($arrInsert);
-		$this->db->query('ALTER TABLE node_data_'.$ct.' ADD COLUMN '.$arrInsert['field_machine_name'].' '.$type[1].( $arrInsert['mandatory'] ? ' NOT NULL' : '' ).';');
+		$this->db->query('ALTER TABLE node_data_'.$ct->id.' ADD COLUMN '.$arrInsert['field_machine_name'].' '.$type[1].( $arrInsert['mandatory'] ? ' NOT NULL' : '' ).';');
 
-		$this->redirect('/admin/content/type/'.$ct);
+		$this->redirect('/admin/content/type/'.$ct->node_type);
 
 	} // END saveContentTypeField() */
 
@@ -86,7 +88,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function addContentTypeField( $ct )
 	{
-		$ct = ARONodeType::finder()->byPK( $ct );
+		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
 		$this->tpl->assign( 'ct', $ct );
 
 		$this->tpl->assign( 'types', self::$field_types );
@@ -102,6 +104,8 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function saveNodeType()
 	{
+		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
+
 		$this->mf_RequirePostVars(array(
 			'node_type' => 'Node type',
 			'node_type_name' => 'Node type name',
@@ -158,7 +162,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function contentType( $ct )
 	{
-		$ct = ARONodeType::finder()->byPK( $ct );
+		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
 		$this->tpl->assign( 'ct', $ct );
 
 		$fields = ARONodeTypeField::finder()->findMany('node_type_id = '.$ct->id.' ORDER BY o ASC');
@@ -197,7 +201,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function content( $ct = null )
 	{
-		$nodes = ARONode::finder()->findMany(( !$ct ? '1' : 'nodes.node_type_id = '.(int)$ct ).' ORDER BY nodes.id DESC');
+		$nodes = ARONode::finder()->findMany(( !$ct ? '1' : 't.node_type = \''.$ct."'" ).' ORDER BY nodes.id DESC');
 		$this->tpl->assign( 'nodes', $nodes );
 
 		$this->tpl->display('content/nodes.tpl.php');

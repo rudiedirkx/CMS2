@@ -18,7 +18,7 @@
 <tr>
 	<td><?=$node->id?></td>
 	<td><span style="float:right;">&nbsp; <a href="<?=$node->url()?>">&gt;&gt;</a></span> <?=$node->title?></td>
-	<td><a href="/admin/content/by-type/<?=$node->node_type_id?>"><?=$node->node_type_name?></a></td>
+	<td><a href="/admin/content/by-type/<?=$node->node_type?>"><?=$node->node_type_name?></a></td>
 </tr>
 <?endforeach?>
 </tbody>
