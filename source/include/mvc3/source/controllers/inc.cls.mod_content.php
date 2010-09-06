@@ -104,8 +104,6 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function saveNodeType()
 	{
-		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
-
 		$this->mf_RequirePostVars(array(
 			'node_type' => 'Node type',
 			'node_type_name' => 'Node type name',
@@ -128,7 +126,7 @@ class Mod_Content extends Main_Inside
 		$iNodeTypeId = $this->db->insert_id();
 		$this->db->query('CREATE TABLE node_data_'.$iNodeTypeId.' ( node_id INTEGER UNSIGNED NOT NULL, PRIMARY KEY (node_id) );');
 
-		$this->redirect('/admin/content/type/'.$iNodeTypeId);
+		$this->redirect('/admin/content/type/'.$arrInsert['node_type']);
 
 	} // END saveNodeType() */
 

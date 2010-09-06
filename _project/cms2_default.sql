@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 05 Sept 2010 om 22:15
+-- Genereertijd: 06 Sept 2010 om 22:34
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -230,6 +230,41 @@ CREATE TABLE IF NOT EXISTS `node_data_6` (
 -- --------------------------------------------------------
 
 --
+-- Tabelstructuur voor tabel `node_data_7`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data_7` (
+  `node_id` int(10) unsigned NOT NULL,
+  `image` varchar(250) NOT NULL,
+  `description` text,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `node_data_7`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `node_data_8`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data_8` (
+  `node_id` int(10) unsigned NOT NULL,
+  `image` varchar(250) NOT NULL,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `node_data_8`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Tabelstructuur voor tabel `node_types`
 --
 
@@ -239,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `node_types` (
   `node_type_name` varchar(40) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type` (`node_type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_types`
@@ -251,7 +286,9 @@ INSERT INTO `node_types` (`id`, `node_type`, `node_type_name`) VALUES
 (3, 'person', 'Person'),
 (4, 'page', 'Page'),
 (5, 'product', 'Les Productos'),
-(6, 'right_page', 'Right Page');
+(6, 'right_page', 'Right Page'),
+(7, 'image', 'Image'),
+(8, 'bg_image', 'Background image');
 
 -- --------------------------------------------------------
 
@@ -271,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `node_type_fields` (
   `o` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type_id` (`node_type_id`,`field_machine_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=14 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=17 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_type_fields`
@@ -290,7 +327,10 @@ INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `fie
 (10, 5, 'colors', 'Colors (1 per line)', '', 'multistring', 1, '-', 0),
 (11, 6, 'right_content', 'Right Content', '--none--', 'html', 1, 'isdjvp0isw', 0),
 (12, 6, 'top_image', 'Top image', '--none--', 'image', 0, 'crop=500*200\r\nextensions=jpg,gif,png', 0),
-(13, 6, 'right_image', 'Right image', '--none--', 'image', 0, 'crop=200*500\r\nextensions=jpg,gif,png', 0);
+(13, 6, 'right_image', 'Right image', '--none--', 'image', 0, 'crop=200*500\r\nextensions=jpg,gif,png', 0),
+(14, 8, 'image', 'Image', '--none--', 'image', 1, '', 0),
+(15, 7, 'image', 'Image', '--none--', 'image', 1, '', 0),
+(16, 7, 'description', 'Description', '--none--', 'text', 0, '', 0);
 
 -- --------------------------------------------------------
 
