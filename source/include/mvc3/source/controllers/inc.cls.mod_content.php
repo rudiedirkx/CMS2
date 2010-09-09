@@ -31,7 +31,55 @@ class Mod_Content extends Main_Inside
 		'/type/*/edit/save'			=> 'saveContentType',
 		'/type/*/add-field'			=> 'addContentTypeField',
 		'/type/*/add-field/save'	=> 'saveContentTypeField',
+
+		'/type/*/new'				=> 'createContent',
+		'/type/*/new/save'			=> 'saveContent',
 	);
+
+
+
+	/**
+	 * 
+	 */
+	protected function saveContent( $ct )
+	{
+		$ct = ARONodeType::get($ct);
+
+		print_r($_POST);
+
+		$this->mf_RequirePostVars(array(
+			'field_title' => 'Field title',
+			'field_machine_name' => 'Field machine name',
+			'field_type' => 'Field type',
+		), true, true);
+
+		$this->redirect('/admin/content/type/'.$ct->node_type);
+
+	} // END saveContent() */
+
+
+	/**
+	 * 
+	 */
+	protected function createContent( $ct )
+	{
+		$ct = ARONodeType::get($ct);
+		$this->tpl->assign( 'ct', $ct );
+
+		$fields = $ct->fields;
+		foreach ( $fields AS &$f ) {
+			$f->options = $f->parseOptions();
+			if ( 'reference' == $f->field_type ) {
+				$f->html_options = $this->db->select_fields('nodes', 'id, title', 'node_type_id IN ('.implode(',', $f->options['node_types']).')');
+			}
+			unset($f);
+		}
+
+		// anything else?
+
+		$this->tpl->display('content/create_content.tpl.php');
+
+	} // END createContent() */
 
 
 
@@ -40,7 +88,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function saveContentTypeField( $ct )
 	{
-		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
+		$ct = ARONodeType::get($ct);
 
 		$this->mf_RequirePostVars(array(
 			'field_title' => 'Field title',
@@ -88,7 +136,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function addContentTypeField( $ct )
 	{
-		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
+		$ct = ARONodeType::get($ct);
 		$this->tpl->assign( 'ct', $ct );
 
 		$this->tpl->assign( 'types', self::$field_types );
@@ -160,7 +208,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function contentType( $ct )
 	{
-		$ct = ARONodeType::finder()->findOne( 'node_type = \''.$ct."'" );
+		$ct = ARONodeType::get($ct);
 		$this->tpl->assign( 'ct', $ct );
 
 		$fields = ARONodeTypeField::finder()->findMany('node_type_id = '.$ct->id.' ORDER BY o ASC');
@@ -178,6 +226,9 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function editContentType( $ct )
 	{
+		$ct = ARONodeType::get($ct);
+		$this->tpl->assign( 'ct', $ct );
+
 		$this->tpl->display('edit_content_type.tpl.php');
 
 	} // END editContentType() */
@@ -188,6 +239,8 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function saveContentType( $ct )
 	{
+		$ct = ARONodeType::get($ct);
+
 		print_r($_POST);
 
 	} // END saveContentType() */

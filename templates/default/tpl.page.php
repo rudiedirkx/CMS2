@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html>
 
-<!-- <?print_r(get_defined_vars())?> -->
-
 <head>
 <title><?=$page->title?></title>
 <style>
 * { margin:0; padding:0; }
 body { padding:10px; }
-div { -webkit-box-sizing:border-box; padding:10px; border:solid 2px green; }
+div { -webkit-box-sizing:border-box; padding:6px; border:solid 1px green; }
 #wrapper { max-width:1000px; margin:0 auto; border:0; padding:0; }
 div.node div.content { background:#faa; }
 div.node div.title { background:#afa; }

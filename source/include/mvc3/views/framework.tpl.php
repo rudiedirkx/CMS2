@@ -4,10 +4,12 @@
 <head>
 <title><?=$_szHtmlTitle?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="/css/general.css" />
-<script type="text/javascript" src="/js/mootools_1_11.js"></script>
-<script type="text/javascript" src="/js/specifics.js"></script>
 <?=$_szHtmlHead?>
+<style>
+body { font-size:14px; font-family:Arial, sans-serif; }
+form p.field span.mandatory { font-weight:bold; color:red; }
+form p.field span.field-description { font-size:12px; margin-left:25px; }
+</style>
 </head>
 
 <body>

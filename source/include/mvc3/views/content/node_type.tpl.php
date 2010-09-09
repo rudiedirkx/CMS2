@@ -6,7 +6,8 @@
 <h1>Node type: <?=$ct->node_type_name?></h1>
 
 <ul>
-	<li><a href="/admin<?=$GLOBALS['url']?>/add-field">Add field</a></li>
+	<li><a href="/admin/content/type/<?=$ct->node_type?>/new">Create content</a></li>
+	<li><a href="/admin/content/type/<?=$ct->node_type?>/add-field">Add field</a></li>
 </ul>
 
 <table border=1>
