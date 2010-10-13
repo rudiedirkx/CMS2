@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 06 Sept 2010 om 22:34
+-- Genereertijd: 13 Oct 2010 om 18:18
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `node_type_id` (`node_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `nodes`
@@ -96,7 +96,8 @@ INSERT INTO `nodes` (`id`, `title`, `node_type_id`, `category_id`, `use_node_tem
 (11, 'Binnenkort!! Dingen!!', 1, NULL, '', ''),
 (12, 'Meer nieuwe dingen', 1, NULL, '', ''),
 (13, 'Wow dit gebeurt nog lange niet :)', 1, NULL, '', ''),
-(14, 'INDEX', 4, NULL, '', '');
+(14, 'INDEX', 4, NULL, '', ''),
+(15, '404 - Not Found', 4, NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -188,7 +189,8 @@ CREATE TABLE IF NOT EXISTS `node_data_4` (
 --
 
 INSERT INTO `node_data_4` (`node_id`, `body`) VALUES
-(14, '<p>Dit is de index!</p>');
+(14, '<p>Dit is de index!</p>'),
+(15, 'Scusi, this page does not existo!');
 
 -- --------------------------------------------------------
 
@@ -321,7 +323,7 @@ INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `fie
 (4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2', 0),
 (5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, '', 0),
 (6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3', 0),
-(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 0, 'node_types=2', 0),
+(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 1, 'node_types=2', 0),
 (8, 4, 'body', 'Body', 'The entire page', 'html', 1, '', 0),
 (9, 5, 'supplier', 'Supplier (shop)', '--none--', 'reference', 0, 'node_types=supplier', 0),
 (10, 5, 'colors', 'Colors (1 per line)', '', 'multistring', 1, '-', 0),
@@ -388,16 +390,21 @@ CREATE TABLE IF NOT EXISTS `routes` (
   `from_regexp` varchar(250) NOT NULL,
   `to_url_path` varchar(250) NOT NULL,
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `forward` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `forward` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `o` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `routes`
 --
 
-INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`) VALUES
-(1, '#^/$#', '/node/14', 1, 0);
+INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`, `o`) VALUES
+(1, '#^/$#', '/node/14', 1, 0, 1),
+(2, '#^/(\\d+)/.#', '/content/%d', 1, 0, 1),
+(3, '#^/content/(\\d+)/?#', '/node/%d', 1, 0, 1),
+(4, '#^/(particulier|werkgever|gemeente|uwv|instantie)/(diensten|vragen|projecten|themas|actueel)$#', '/view/4', 1, 0, 0),
+(5, '#^/(particulier|werkgever|gemeente|uwv|instantie)/nieuws(/?.*)$#', '/%s/actueel%s', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -418,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `url_paths` (
 INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
 ('/rudie', '/node/7'),
 ('/joris', '/node/6'),
-('404', '/node/1'),
+('404', '/node/15'),
 ('/nieuws', '/view/1'),
 ('/root', '/user/1'),
 ('/user/root', '/user/1');

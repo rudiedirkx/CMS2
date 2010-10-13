@@ -7,7 +7,7 @@
 * { margin:0; padding:0; }
 body { padding:10px; }
 div { -webkit-box-sizing:border-box; padding:6px; border:solid 1px green; }
-#wrapper { max-width:1000px; margin:0 auto; border:0; padding:0; }
+#wrapper { max-width:960px; margin:0 auto; border:0; padding:0; }
 div.node div.content { background:#faa; }
 div.node div.title { background:#afa; }
 #wrapper .region { background:lightblue; margin-bottom:10px; }
@@ -16,6 +16,8 @@ div.node div.title { background:#afa; }
 
 <body>
 <div id="wrapper">
+
+	<p id="url_path"><?=implode(' => ', $url_path)?></p>
 
 <div class="region" id="header">
 	<?$page->render_region('header')?>
