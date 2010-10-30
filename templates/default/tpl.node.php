@@ -4,9 +4,15 @@
 	<div class="content">
 	<?foreach ( $node->_fields AS $k => $f ):?>
 
-	<div class="field-<?=$k?>">
-		<div title="<?=$f->field_title?>" class="field-content"><?=$node->$k?></div>
-	</div>
+		<div class="field-<?=$k?>">
+			<div title="<?=$f->field_title?>" class="field-content">
+				<?=$node->$k?>
+				<?if( 0 === strpos($k, 'ref_') ):?>
+					<? $ref = $node->{substr($k, 4)} ?>
+					= <?=$ref ? $ref->title : 'NULL'?>
+				<?endif?>
+			</div>
+		</div>
 
 	<?endforeach?>
 	</div>

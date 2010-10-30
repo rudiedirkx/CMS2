@@ -9,7 +9,7 @@ require_once('cfg_db.php');
 
 function __autoload( $f_szClass ) {
 	$class = strtolower($f_szClass);
-	foreach ( array(PROJECT_MODELS, PROJECT_INCLUDE, PROJECT_CONTROLLERS) AS $dir ) {
+	foreach ( array(PROJECT_MODELS, PROJECT_INCLUDE, PROJECT_CONTROLLERS, CMS2_SCRIPT_ROOT.'/source/logic') AS $dir ) {
 		if ( file_exists($dir . '/inc.cls.' . $class . '.php') ) {
 			require_once($dir . '/inc.cls.' . $class . '.php');
 			break;

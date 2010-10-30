@@ -22,6 +22,10 @@ class Mod_Content extends Main_Inside
 		'/'							=> 'content',
 		'/by-type/*'				=> 'content',
 
+		'/node/#'					=> 'editNode',
+		'/node/*/add'				=> 'addNode',
+		'/node/add/*'				=> 'addNode',
+
 		'/types/add'				=> 'addNodeType',
 		'/types/add/save'			=> 'saveNodeType',
 
@@ -35,6 +39,20 @@ class Mod_Content extends Main_Inside
 		'/type/*/new'				=> 'createContent',
 		'/type/*/new/save'			=> 'saveContent',
 	);
+
+
+
+	/**
+	 * 
+	 */
+	protected function editNode( $node )
+	{
+		$backend_node = ARONode::finder()->byPK((int)$node);
+		$frontend_node = Node::load((int)$node);
+
+		$backend_node->render_form($frontend_node);
+
+	} // END editNode() */
 
 
 

@@ -60,7 +60,7 @@ require_once('../source/logic/inc.cls.node.php');
 require_once('../source/logic/inc.cls.block.php');
 require_once('../source/logic/inc.cls.user.php');
 require_once('../source/logic/inc.cls.view.php');
-require_once('../source/logic/inc.cls.datetime.php');
+require_once('../source/logic/inc.cls.dateandtime.php');
 
 /*$page = get_system_path_object($arrSystemPath);
 if ( false === $page ) {
