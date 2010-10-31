@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 31 Oct 2010 om 13:39
+-- Genereertijd: 31 Oct 2010 om 13:55
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -18,6 +18,31 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- Database: `cms2_default`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `argument_maps`
+--
+
+CREATE TABLE IF NOT EXISTS `argument_maps` (
+  `from` varchar(100) NOT NULL,
+  `to` varchar(100) NOT NULL,
+  `language_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`from`),
+  KEY `language_id` (`language_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `argument_maps`
+--
+
+INSERT INTO `argument_maps` (`from`, `to`, `language_id`) VALUES
+('particulier', 'individual', NULL),
+('werkgever', 'employer', NULL),
+('gemeente', 'municipality', NULL),
+('instantie', 'institution', NULL),
+('', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -396,18 +421,21 @@ CREATE TABLE IF NOT EXISTS `routes` (
   `active` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `forward` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `o` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `argument_map_id` int(10) unsigned DEFAULT NULL,
+  `cache` enum('dont_cache','cache_premap','cache_postmap') NOT NULL DEFAULT 'dont_cache',
+  PRIMARY KEY (`id`),
+  KEY `map_arguments` (`argument_map_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `routes`
 --
 
-INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`, `o`) VALUES
-(2, '/(\\d+)/.', '/content/%d', 1, 0, 1),
-(3, '/content/(\\d+)/?', '/node/%d', 1, 0, 1),
-(4, '/(particulier|werkgever|gemeente|uwv|instantie)/(diensten|vragen|projecten|themas|actueel)$', '/view/4', 1, 0, 0),
-(5, '/(particulier|werkgever|gemeente|uwv|instantie)/nieuws(/?.*)$', '/%s/actueel%s', 1, 0, 0);
+INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`, `o`, `argument_map_id`, `cache`) VALUES
+(2, '/(\\d+)/.', '/content/%d', 1, 0, 1, NULL, 'dont_cache'),
+(3, '/content/(\\d+)/?', '/node/%d', 1, 0, 1, NULL, 'dont_cache'),
+(4, '/(particulier|werkgever|gemeente|uwv|instantie)/(diensten|vragen|projecten|themas|actueel)$', '/view/4', 1, 0, 0, NULL, 'dont_cache'),
+(5, '/(particulier|werkgever|gemeente|uwv|instantie)/nieuws(/?.*)$', '/%s/actueel%s', 1, 0, 0, NULL, 'dont_cache');
 
 -- --------------------------------------------------------
 
@@ -418,6 +446,7 @@ INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`, `
 CREATE TABLE IF NOT EXISTS `url_paths` (
   `from_url_path` varchar(250) NOT NULL,
   `to_url_path` varchar(250) NOT NULL,
+  `arguments` text NOT NULL COMMENT 'serialized array of route-arguments',
   PRIMARY KEY (`from_url_path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -425,14 +454,14 @@ CREATE TABLE IF NOT EXISTS `url_paths` (
 -- Gegevens worden uitgevoerd voor tabel `url_paths`
 --
 
-INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
-('/rudie', '/node/7'),
-('/joris', '/node/6'),
-('404', '/node/15'),
-('/nieuws', '/view/1'),
-('/root', '/user/1'),
-('/user/root', '/user/1'),
-('/', '/node/14');
+INSERT INTO `url_paths` (`from_url_path`, `to_url_path`, `arguments`) VALUES
+('/rudie', '/node/7', ''),
+('/joris', '/node/6', ''),
+('404', '/node/15', ''),
+('/nieuws', '/view/1', ''),
+('/root', '/user/1', ''),
+('/user/root', '/user/1', ''),
+('/', '/node/14', '');
 
 -- --------------------------------------------------------
 
