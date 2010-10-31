@@ -6,10 +6,11 @@
 
 		<div class="field-<?=$k?>">
 			<div title="<?=$f->field_title?>" class="field-content">
-				<?=$node->$k?>
-				<?if( 0 === strpos($k, 'ref_') ):?>
+				<?if( 0 === strpos($k, 'ref_') && ($ref = $node->{substr($k, 4)}) ):?>
 					<? $ref = $node->{substr($k, 4)} ?>
-					= <?=$ref ? $ref->title : 'NULL'?>
+					<?=$ref->title?>
+				<?else:?>
+					<?=$node->$k?>
 				<?endif?>
 			</div>
 		</div>

@@ -22,9 +22,10 @@ class Mod_Content extends Main_Inside
 		'/'							=> 'content',
 		'/by-type/*'				=> 'content',
 
+		'/type/*/new'				=> 'addNode',
+		'/type/*/insert'			=> 'insertNode',
 		'/node/#'					=> 'editNode',
-		'/node/*/add'				=> 'addNode',
-		'/node/add/*'				=> 'addNode',
+		'/node/update'				=> 'updateNode',
 
 		'/types/add'				=> 'addNodeType',
 		'/types/add/save'			=> 'saveNodeType',
@@ -35,9 +36,6 @@ class Mod_Content extends Main_Inside
 		'/type/*/edit/save'			=> 'saveContentType',
 		'/type/*/add-field'			=> 'addContentTypeField',
 		'/type/*/add-field/save'	=> 'saveContentTypeField',
-
-		'/type/*/new'				=> 'createContent',
-		'/type/*/new/save'			=> 'saveContent',
 	);
 
 
@@ -45,12 +43,47 @@ class Mod_Content extends Main_Inside
 	/**
 	 * 
 	 */
-	protected function editNode( $node )
+	protected function updateNode()
 	{
-		$backend_node = ARONode::finder()->byPK((int)$node);
-		$frontend_node = Node::load((int)$node);
+		$this->mf_RequirePostVars(array(
+			'node_id' => 'NODE',
+		), true, true);
 
-		$backend_node->render_form($frontend_node);
+		$node_id = $_POST['node_id'];
+		$node = ARONode::finder()->byPK((int)$node_id);
+		$ct = $node->type;
+
+		$data = $ct->validateNode($_POST, $errors);
+		if ( $errors ) {
+			return $this->editNode($node_id, $errors);
+		}
+
+		$title = $_POST['title'];
+		unset($_POST['node_id'], $_POST['title']);
+		// save
+		echo 'do save stuff';
+
+	} // END updateNode() */
+
+
+	/**
+	 * 
+	 */
+	protected function editNode( $node, $errors = array() )
+	{
+		$node = ARONode::finder()->byPK((int)$node);
+		$this->tpl->assign( 'node', $node );
+
+		$nodevalues = Node::load($node->id);
+		$this->tpl->assign( 'values', !empty($_POST) ? (object)$_POST : $nodevalues );
+		$this->tpl->assign( 'errors', $errors );
+
+		$ct = $node->type;
+		$ct->prepFields();
+		$this->tpl->assign( 'ct', $ct );
+
+		$this->tpl->display('content/node_form.tpl.php');
+//		print_r($node);
 
 	} // END editNode() */
 
@@ -59,45 +92,35 @@ class Mod_Content extends Main_Inside
 	/**
 	 * 
 	 */
-	protected function saveContent( $ct )
+	protected function insertNode( $ct )
 	{
 		$ct = ARONodeType::get($ct);
 
-		print_r($_POST);
+		$data = $ct->validateNode($_POST, $errors);
+		if ( $errors ) {
+			return $this->addNode($node_id, $errors);
+		}
 
-		$this->mf_RequirePostVars(array(
-			'field_title' => 'Field title',
-			'field_machine_name' => 'Field machine name',
-			'field_type' => 'Field type',
-		), true, true);
+		echo 'do save stuff';
 
-		$this->redirect('/admin/content/type/'.$ct->node_type);
-
-	} // END saveContent() */
+	} // END insertNode() */
 
 
 	/**
 	 * 
 	 */
-	protected function createContent( $ct )
+	protected function addNode( $ct, $errors = array() )
 	{
 		$ct = ARONodeType::get($ct);
+		$ct->prepFields();
 		$this->tpl->assign( 'ct', $ct );
 
-		$fields = $ct->fields;
-		foreach ( $fields AS &$f ) {
-			$f->options = $f->parseOptions();
-			if ( 'reference' == $f->field_type ) {
-				$f->html_options = $this->db->select_fields('nodes', 'id, title', 'node_type_id IN ('.implode(',', $f->options['node_types']).')');
-			}
-			unset($f);
-		}
+		$this->tpl->assign( 'values', (object)$_POST );
+		$this->tpl->assign( 'errors', $errors );
 
-		// anything else?
+		$this->tpl->display('content/node_form.tpl.php');
 
-		$this->tpl->display('content/create_content.tpl.php');
-
-	} // END createContent() */
+	} // END addNode() */
 
 
 

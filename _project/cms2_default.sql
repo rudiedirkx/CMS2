@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 13 Oct 2010 om 18:18
+-- Genereertijd: 31 Oct 2010 om 05:15
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -157,6 +157,7 @@ CREATE TABLE IF NOT EXISTS `node_data_3` (
   `birthdate` date DEFAULT NULL,
   `ref_supervisor` int(10) unsigned DEFAULT NULL,
   `ref_office` int(10) unsigned DEFAULT NULL,
+  `fav_colours` text,
   PRIMARY KEY (`node_id`),
   KEY `ref_office` (`ref_office`),
   KEY `ref_supervisor` (`ref_supervisor`)
@@ -166,11 +167,11 @@ CREATE TABLE IF NOT EXISTS `node_data_3` (
 -- Gegevens worden uitgevoerd voor tabel `node_data_3`
 --
 
-INSERT INTO `node_data_3` (`node_id`, `birthdate`, `ref_supervisor`, `ref_office`) VALUES
-(6, '2010-01-01', 7, 10),
-(7, '2010-03-16', NULL, 10),
-(8, '2010-12-29', NULL, 0),
-(9, '2010-02-14', 7, 0);
+INSERT INTO `node_data_3` (`node_id`, `birthdate`, `ref_supervisor`, `ref_office`, `fav_colours`) VALUES
+(6, '2010-01-01', 7, 10, NULL),
+(7, '2010-03-16', NULL, 10, NULL),
+(8, '2010-12-29', NULL, 0, NULL),
+(9, '2010-02-14', 7, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -274,6 +275,7 @@ CREATE TABLE IF NOT EXISTS `node_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `node_type` varchar(40) NOT NULL,
   `node_type_name` varchar(40) NOT NULL,
+  `submit_rules` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type` (`node_type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
@@ -282,15 +284,15 @@ CREATE TABLE IF NOT EXISTS `node_types` (
 -- Gegevens worden uitgevoerd voor tabel `node_types`
 --
 
-INSERT INTO `node_types` (`id`, `node_type`, `node_type_name`) VALUES
-(1, 'nieuws', 'Nieuws'),
-(2, 'office', 'Office'),
-(3, 'person', 'Person'),
-(4, 'page', 'Page'),
-(5, 'product', 'Les Productos'),
-(6, 'right_page', 'Right Page'),
-(7, 'image', 'Image'),
-(8, 'bg_image', 'Background image');
+INSERT INTO `node_types` (`id`, `node_type`, `node_type_name`, `submit_rules`) VALUES
+(1, 'nieuws', 'Nieuws', ''),
+(2, 'office', 'Office', ''),
+(3, 'person', 'Person', ''),
+(4, 'page', 'Page', ''),
+(5, 'product', 'Les Productos', ''),
+(6, 'right_page', 'Right Page', ''),
+(7, 'image', 'Image', ''),
+(8, 'bg_image', 'Background image', '');
 
 -- --------------------------------------------------------
 
@@ -307,32 +309,34 @@ CREATE TABLE IF NOT EXISTS `node_type_fields` (
   `field_type` varchar(40) NOT NULL,
   `mandatory` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `input_format` text NOT NULL,
+  `input_regexp` varchar(200) NOT NULL DEFAULT '',
   `o` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `node_type_id` (`node_type_id`,`field_machine_name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='field types: string,text,html,date,int,float,file,image' AUTO_INCREMENT=18 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `node_type_fields`
 --
 
-INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `field_title`, `field_description`, `field_type`, `mandatory`, `input_format`, `o`) VALUES
-(1, 1, 'teaser', 'Teaser', 'A few words about this post', 'string', 1, '', 0),
-(2, 1, 'body', 'Body', 'The actual content', 'html', 1, '', 0),
-(3, 1, 'publicationdate', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, '', 0),
-(4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2', 0),
-(5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, '', 0),
-(6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3', 0),
-(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 1, 'node_types=2', 0),
-(8, 4, 'body', 'Body', 'The entire page', 'html', 1, '', 0),
-(9, 5, 'supplier', 'Supplier (shop)', '--none--', 'reference', 0, 'node_types=supplier', 0),
-(10, 5, 'colors', 'Colors (1 per line)', '', 'multistring', 1, '-', 0),
-(11, 6, 'right_content', 'Right Content', '--none--', 'html', 1, 'isdjvp0isw', 0),
-(12, 6, 'top_image', 'Top image', '--none--', 'image', 0, 'crop=500*200\r\nextensions=jpg,gif,png', 0),
-(13, 6, 'right_image', 'Right image', '--none--', 'image', 0, 'crop=200*500\r\nextensions=jpg,gif,png', 0),
-(14, 8, 'image', 'Image', '--none--', 'image', 1, '', 0),
-(15, 7, 'image', 'Image', '--none--', 'image', 1, '', 0),
-(16, 7, 'description', 'Description', '--none--', 'text', 0, '', 0);
+INSERT INTO `node_type_fields` (`id`, `node_type_id`, `field_machine_name`, `field_title`, `field_description`, `field_type`, `mandatory`, `input_format`, `input_regexp`, `o`) VALUES
+(1, 1, 'teaser', 'Teaser', 'A few words about this post', 'string', 1, '', '', 0),
+(2, 1, 'body', 'Body', 'The actual content', 'html', 1, '', '', 0),
+(3, 1, 'publicationdate', 'Publicatiedatum', 'Vanaf welke datum moet deze post verschijnen?', 'date', 1, '', '', 0),
+(4, 1, 'ref_office', '`Office`', 'Op welke office slaat dit bericht?', 'reference', 1, 'node_types=2', '', 0),
+(5, 3, 'birthdate', 'Birthdate', 'Year + month + day of birth of this person', 'date', 0, '', '', 0),
+(6, 3, 'ref_supervisor', 'Supervisor', 'Who is this person''s supervisor?', 'reference', 0, 'node_types=3', '', 0),
+(7, 3, 'ref_office', 'Office', 'Where does Jantje work?', 'reference', 1, 'node_types=2', '', 0),
+(8, 4, 'body', 'Body', 'The entire page', 'html', 1, '', '', 0),
+(9, 5, 'supplier', 'Supplier (shop)', '--none--', 'reference', 0, 'node_types=supplier', '', 0),
+(10, 5, 'colors', 'Colors (1 per line)', '', 'multistring', 1, '-', '', 0),
+(11, 6, 'right_content', 'Right Content', '--none--', 'html', 1, 'isdjvp0isw', '', 0),
+(12, 6, 'top_image', 'Top image', '--none--', 'image', 0, 'crop=500*200\r\nextensions=jpg,gif,png', '', 0),
+(13, 6, 'right_image', 'Right image', '--none--', 'image', 0, 'crop=200*500\r\nextensions=jpg,gif,png', '', 0),
+(14, 8, 'image', 'Image', '--none--', 'image', 1, '', '', 0),
+(15, 7, 'image', 'Image', '--none--', 'image', 1, '', '', 0),
+(16, 7, 'description', 'Description', '--none--', 'text', 0, '', '', 0),
+(17, 3, 'fav_colours', 'Favourite colours', '--none--', 'multistring', 0, '', '', 0);
 
 -- --------------------------------------------------------
 
