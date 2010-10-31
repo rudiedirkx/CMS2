@@ -26,7 +26,7 @@ function iterate_towards_system_path( $path, $with_404 = true ) {
 		$routes = $db->select('routes', "active = 1 ORDER BY o ASC, id DESC");
 	}
 	foreach ( $routes AS $r ) {
-		if ( 0 < preg_match($r->from_regexp, $path, $parrMatches) ) {
+		if ( 0 < preg_match('#^'.$r->from_regexp.'#', $path, $parrMatches) ) {
 			$parrMatches[0] = $r->to_url_path;
 			array_push($parrMatches, $with_404);
 			return iterate_towards_system_path(call_user_func_array('sprintf', $parrMatches));

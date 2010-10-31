@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Machine: localhost
--- Genereertijd: 31 Oct 2010 om 05:15
+-- Genereertijd: 31 Oct 2010 om 13:39
 -- Serverversie: 5.1.36
 -- PHP-Versie: 5.3.0
 
@@ -404,11 +404,10 @@ CREATE TABLE IF NOT EXISTS `routes` (
 --
 
 INSERT INTO `routes` (`id`, `from_regexp`, `to_url_path`, `active`, `forward`, `o`) VALUES
-(1, '#^/$#', '/node/14', 1, 0, 1),
-(2, '#^/(\\d+)/.#', '/content/%d', 1, 0, 1),
-(3, '#^/content/(\\d+)/?#', '/node/%d', 1, 0, 1),
-(4, '#^/(particulier|werkgever|gemeente|uwv|instantie)/(diensten|vragen|projecten|themas|actueel)$#', '/view/4', 1, 0, 0),
-(5, '#^/(particulier|werkgever|gemeente|uwv|instantie)/nieuws(/?.*)$#', '/%s/actueel%s', 1, 0, 0);
+(2, '/(\\d+)/.', '/content/%d', 1, 0, 1),
+(3, '/content/(\\d+)/?', '/node/%d', 1, 0, 1),
+(4, '/(particulier|werkgever|gemeente|uwv|instantie)/(diensten|vragen|projecten|themas|actueel)$', '/view/4', 1, 0, 0),
+(5, '/(particulier|werkgever|gemeente|uwv|instantie)/nieuws(/?.*)$', '/%s/actueel%s', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -432,7 +431,8 @@ INSERT INTO `url_paths` (`from_url_path`, `to_url_path`) VALUES
 ('404', '/node/15'),
 ('/nieuws', '/view/1'),
 ('/root', '/user/1'),
-('/user/root', '/user/1');
+('/user/root', '/user/1'),
+('/', '/node/14');
 
 -- --------------------------------------------------------
 

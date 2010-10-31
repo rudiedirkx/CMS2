@@ -21,6 +21,7 @@ form p.field.error input, form p.field.error select, form p.field.error textarea
 		<li><a href="/admin/">Admin</a></li>
 		<li><a href="/admin/content">Content</a></li>
 		<li><a href="/admin/content/types">Node types</a></li>
+		<li><a href="/admin/settings">Settings</a></li>
 	</ul>
 </div>
 
