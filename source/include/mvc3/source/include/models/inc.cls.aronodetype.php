@@ -5,17 +5,19 @@ class ARONodeType extends ActiveRecordObject {
 	const _TABLE = 'node_types';
 	const _PK = 'id';
 	public static $_GETTERS = array(
-		'fields' => array( self::GETTER_MANY, true, 'ARONodeTypeField', 'id', 'node_type_id' ),
+//		'fields' => array( self::GETTER_MANY, true, 'ARONodeTypeField', 'id', 'node_type_id' ),
+		'fields' => array( self::GETTER_FUNCTION, true, 'getFields' ),
 	);
 
 
 	function validateNode( $input, &$errors = array() ) {
 		$output = array();
-		if ( !isset($input['title']) || !is_string($input['title']) || '' == $input['title'] ) {
-			$errors['title'] = 'Mandatory!';
-		}
+//		if ( !isset($input['title']) || !is_string($input['title']) || '' == $input['title'] ) {
+//			$errors['title'] = 'Mandatory!';
+//		}
 		foreach ( $this->fields AS $field ) {
 			$name = $field->field_machine_name;
+			$output[$name] = empty($input[$name]) ? '' : (string)$input[$name];
 			if ( $field->mandatory && empty($input[$name]) ) {
 				$errors[$name] = 'Mandatory!';
 			}
@@ -34,6 +36,24 @@ class ARONodeType extends ActiveRecordObject {
 			unset($f);
 		}
 		return $this->fields;
+	}
+
+
+	public function getFields() {
+		$fields = ARONodeTypeField::finder()->findMany('node_type_id = '.(int)$this->id);
+		array_unshift($fields, new ARONodeTypeField(array(
+			'id' => 0,
+			'node_type_id' => $this->id,
+			'field_machine_name' => 'title',
+			'field_title' => 'Title',
+			'field_description' => 'Mandatory title',
+			'field_type' => 'string',
+			'mandatory' => true,
+			'input_format' => '',
+			'input_regexp' => '',
+			'o' => -1,
+		)));
+		return $fields;
 	}
 
 

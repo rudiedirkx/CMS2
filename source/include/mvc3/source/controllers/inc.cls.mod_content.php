@@ -47,10 +47,11 @@ class Mod_Content extends Main_Inside
 	{
 		$this->mf_RequirePostVars(array(
 			'node_id' => 'NODE',
+			'title' => 'TITLE',
 		), true, true);
 
-		$node_id = $_POST['node_id'];
-		$node = ARONode::finder()->byPK((int)$node_id);
+		$node_id = (int)$_POST['node_id'];
+		$node = ARONode::finder()->byPK($node_id);
 		$ct = $node->type;
 
 		$data = $ct->validateNode($_POST, $errors);
@@ -58,10 +59,15 @@ class Mod_Content extends Main_Inside
 			return $this->editNode($node_id, $errors);
 		}
 
-		$title = $_POST['title'];
-		unset($_POST['node_id'], $_POST['title']);
+		$title = $data['title'];
+		unset($data['title']);
+
 		// save
-		echo 'do save stuff';
+		$update = $this->db->update('node_data_'.$ct->id, $data, 'node_id = '.$node_id);
+//var_dump($update); exit;
+
+		$goto = isset($_POST['goto']) ? $_POST['goto'] : '/admin/content/node/'.$node_id;
+		$this->redirect($goto);
 
 	} // END updateNode() */
 

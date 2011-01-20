@@ -6,13 +6,14 @@
 <h1><?if ($node):?>Edit <?=$ct->node_type_name?>: <?=$node->title?><?else:?>Create node: <?=$ct->node_type_name?><?endif?></h1>
 
 <form method="post" action="/admin/content/<?=$node ? 'node/update' : 'type/'.$ct->node_type.'/insert'?>">
+<?if( !empty($_GET['goto']) ):?>
+	<input type="hidden" name="goto" value="<?=$_GET['goto']?>" />
+<?endif?>
 <?if( $node ):?>
-<input type="hidden" name="node_id" value="<?=$node->id?>">
+	<input type="hidden" name="node_id" value="<?=$node->id?>">
 <?endif?>
 <fieldset>
 	<legend>Node content</legend>
-
-	<p class="field title<?if(isset($errors['title'])):?> error<?endif?>">Title (string)<span class="mandatory"> *</span><br><input type="text" name="title" value="<?=$values ? htmlspecialchars($values->title) : ''?>" /></p>
 
 	<?foreach( $ct->fields AS $field ):?>
 		<p class="field <?=$field->field_machine_name?><?if(isset($errors[$field->field_machine_name])):?> error<?endif?>"><?=$field->field_title?> (<?=$field->field_type?>)<?if($field->mandatory):?><span class="mandatory"> *</span><?endif?><br>

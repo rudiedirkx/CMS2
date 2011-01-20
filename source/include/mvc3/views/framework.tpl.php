@@ -9,7 +9,7 @@
 body { font-size:14px; font-family:Arial, sans-serif; }
 form p.field span.mandatory { font-weight:bold; color:red; }
 form p.field span.field-description { font-size:12px; margin-left:25px; }
-form p.field.error { color:red; }
+form p.field.error { color:red; font-size:16px; text-transform:uppercase; }
 form p.field.error input, form p.field.error select, form p.field.error textarea { border-color:red; }
 </style>
 </head>
