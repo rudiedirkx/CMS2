@@ -13,6 +13,50 @@ class ARONodeTypeField extends ActiveRecordObject {
 	}
 
 
+	function validateValue( $value ) {
+		if ( $this->mandatory && empty($value) ) {
+			return 'Mandatory!';
+		}
+		if ( $this->input_regexp && !preg_match('#'.$this->input_regexp.'#', $value) ) {
+			return 'Invalid format. Must be: '.$this->input_regexp;
+		}
+		$options = $this->parseOptions($this->input_format);
+		switch ( $this->field_type ) {
+			case 'integer':
+				if ( (string)(int)$value !== (string)$value ) {
+					return 'Invalid number';
+				}
+			break;
+			case 'float':
+				if ( !is_number($value) ) {
+					return 'Invalid number';
+				}
+			break;
+			case 'date':
+				if ( !preg_match('#^\d\d\d\d\-\d\d?\-\d\d?$#', $value) ) {
+					return 'Invalid date';
+				}
+			break;
+			case 'time':
+				if ( !preg_match('#^\d\d?:\d\d?(?::\d\d?)?$#', $value) ) {
+					return 'Invalid time';
+				}
+			break;
+			case 'dateandtime':
+				if ( !preg_match('#^\d\d\d\d\-\d\d?\-\d\d? \d\d?:\d\d?(?::\d\d?)?$#', $value) ) {
+					return 'Invalid date+time';
+				}
+			break;
+			case 'reference':
+				if ( !$this->getDbObject()->count('nodes', 'id = '.(int)$value.' AND node_type_id IN ('.implode(',', $options['node_types']).')') ) {
+					return 'Invalid reference ('.(int)$value.' not found)';
+				}
+			break;
+		}
+		return true;
+	}
+
+
 	function parseOptions( $o = null ) {
 		if ( !$o && !empty($this) ) {
 			$o = $this->input_format;

@@ -12,14 +12,11 @@ class ARONodeType extends ActiveRecordObject {
 
 	function validateNode( $input, &$errors = array() ) {
 		$output = array();
-//		if ( !isset($input['title']) || !is_string($input['title']) || '' == $input['title'] ) {
-//			$errors['title'] = 'Mandatory!';
-//		}
 		foreach ( $this->fields AS $field ) {
 			$name = $field->field_machine_name;
-			$output[$name] = empty($input[$name]) ? '' : (string)$input[$name];
-			if ( $field->mandatory && empty($input[$name]) ) {
-				$errors[$name] = 'Mandatory!';
+			$output[$name] = empty($input[$name]) ? null : (string)$input[$name];
+			if ( true !== ($validity = $field->validateValue($input[$name])) ) {
+				$errors[$name] = $validity;
 			}
 		}
 		return $errors ? false : $output;

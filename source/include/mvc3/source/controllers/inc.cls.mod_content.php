@@ -54,8 +54,8 @@ class Mod_Content extends Main_Inside
 		$node = ARONode::finder()->byPK($node_id);
 		$ct = $node->type;
 
-		$data = $ct->validateNode($_POST, $errors);
-		if ( $errors ) {
+		$data = $ct->validateNode($_POST, $errors = array());
+		if ( false === $data ) {
 			return $this->editNode($node_id, $errors);
 		}
 
@@ -104,10 +104,24 @@ class Mod_Content extends Main_Inside
 
 		$data = $ct->validateNode($_POST, $errors);
 		if ( $errors ) {
-			return $this->addNode($node_id, $errors);
+			return $this->addNode($ct, $errors);
 		}
 
-		echo 'do save stuff';
+		$title = $data['title'];
+		unset($data['title']);
+
+		// save
+		$node_id = ARONode::finder()->insert(array(
+			'title' => $title,
+			'node_type_id' => $ct->id,
+		));
+echo $this->db->error;
+		$data['node_id'] = $node_id;
+		$this->db->insert('node_data_'.$ct->id, $data);
+echo $this->db->error;
+
+		$goto = isset($_POST['goto']) ? $_POST['goto'] : '/admin/content/node/'.$node_id;
+		$this->redirect($goto);
 
 	} // END insertNode() */
 
@@ -117,7 +131,7 @@ class Mod_Content extends Main_Inside
 	 */
 	protected function addNode( $ct, $errors = array() )
 	{
-		$ct = ARONodeType::get($ct);
+		$ct = is_object($ct) ? $ct : ARONodeType::get($ct);
 		$ct->prepFields();
 		$this->tpl->assign( 'ct', $ct );
 
