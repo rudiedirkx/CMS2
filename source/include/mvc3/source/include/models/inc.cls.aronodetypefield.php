@@ -7,6 +7,12 @@ class ARONodeTypeField extends ActiveRecordObject {
 	public static $_GETTERS = array();
 
 
+	function deleteField( $field ) {
+		$this->getDbObject()->delete('node_type_fields', 'id = '.$field->id);
+		$this->getDbObject()->query('ALTER TABLE node_data_'.$field->node_type_id.' DROP COLUMN '.$field->field_machine_name.'');
+	}
+
+
 	function parseOptions( $o = null ) {
 		if ( !$o && !empty($this) ) {
 			$o = $this->input_format;

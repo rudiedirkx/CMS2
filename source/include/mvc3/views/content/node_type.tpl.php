@@ -17,6 +17,7 @@
 	<th>Title</th>
 	<th>Type</th>
 	<th>Mandatory?</th>
+	<td></td>
 </tr>
 </thead>
 <tbody>
@@ -26,6 +27,7 @@
 	<td><?=$f->field_title?></td>
 	<td><?=$types[$f->field_type][0]?></td>
 	<td align=center><?if($f->mandatory):?>YES<?else:?>-<?endif?></td>
+	<td><a href="?del=<?=$f->id?>">del</a></td>
 </tr>
 <?endforeach?>
 </tbody>

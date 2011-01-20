@@ -258,6 +258,20 @@ class Mod_Content extends Main_Inside
 		$ct = ARONodeType::get($ct);
 		$this->tpl->assign( 'ct', $ct );
 
+		if ( isset($_GET['del']) ) {
+			// remove field
+			$f = null;
+			foreach ( $ct->fields AS $_f ) {
+				if ( (int)$_f->id === (int)$_GET['del'] ) {
+					$f = $_f;
+					break;
+				}
+			}
+			if ( $f ) {
+				ARONodeTypeField::finder()->deleteField($f);
+			}
+		}
+
 		$fields = ARONodeTypeField::finder()->findMany('node_type_id = '.$ct->id.' ORDER BY o ASC');
 		$this->tpl->assign( 'fields', $fields );
 
