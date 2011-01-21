@@ -23,7 +23,7 @@
 <tbody>
 <?foreach($fields AS $f):?>
 <tr>
-	<td><?=$f->field_machine_name?></td>
+	<td><a href="/admin/content/type/<?=$ct->node_type?>/field/<?=$f->field_machine_name?>/"><?=$f->field_machine_name?></a></td>
 	<td><?=$f->field_title?></td>
 	<td><?=$types[$f->field_type][0]?></td>
 	<td align=center><?if($f->mandatory):?>YES<?else:?>-<?endif?></td>

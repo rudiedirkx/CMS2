@@ -9,6 +9,14 @@ class ARONode extends ActiveRecordObject {
 	);
 
 
+	function delete() {
+		$db = $this->getDbObject();
+		$db->delete('node_data_'.$this->node_type_id, 'node_id = '.$this->id);
+echo $db->error;
+		return parent::delete();
+	}
+
+
 	function url() {
 		return '/node/'.$this->id;
 	}

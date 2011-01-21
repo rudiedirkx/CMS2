@@ -5,7 +5,7 @@
 
 <h1>All Nodes</h1>
 
-<table border=1>
+<table>
 <thead>
 <tr>
 	<th>ID</th>
@@ -19,6 +19,7 @@
 	<td><a href="<?=$node->admin_url()?>"><?=$node->id?></a></td>
 	<td><span style="float:right;">&nbsp; <a href="<?=$node->url()?>">&gt;&gt;</a></span> <a href="<?=$node->admin_url()?>?goto=/admin/content"><?=$node->title?></a></td>
 	<td><a href="/admin/content/by-type/<?=$node->node_type?>"><?=$node->node_type_name?></a></td>
+	<td><a href="/admin/content/node/<?=$node->id?>/delete">del</a></td>
 </tr>
 <?endforeach?>
 </tbody>

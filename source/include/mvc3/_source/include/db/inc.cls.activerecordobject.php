@@ -162,8 +162,12 @@ abstract class ActiveRecordObject {
 //		return isset($this->_GETTERS[$key]) && is_callable(array($this, $this->_GETTERS[$key])) ? call_user_func(array($this, $this->_GETTERS[$key])) : null;
 	}
 
-	protected function delete() {
+	public function delete() {
 		return $this->getDbObject()->delete( $this->getTableName(), $this->getPKName().' = '.$this->getDbObject()->escapeAndQuote($this->getPKValue()).' LIMIT 1' );
+	}
+
+	public function update( $updates ) {
+		return $this->getDbObject()->update( $this->getTableName(), $updates, $this->getPKName().' = '.$this->getDbObject()->escapeAndQuote($this->getPKValue()).' LIMIT 1' );
 	}
 
 	protected function fill( $data, $init = true ) {

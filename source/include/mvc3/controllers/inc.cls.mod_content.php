@@ -25,6 +25,7 @@ class Mod_Content extends Main_Inside
 		'/type/*/new'				=> 'addNode',
 		'/type/*/insert'			=> 'insertNode',
 		'/node/#'					=> 'editNode',
+		'/node/#/delete'			=> 'deleteNode',
 		'/node/update'				=> 'updateNode',
 
 		'/types/add'				=> 'addNodeType',
@@ -34,9 +35,70 @@ class Mod_Content extends Main_Inside
 		'/type/*'					=> 'contentType',
 		'/type/*/edit'				=> 'editContentType',
 		'/type/*/edit/save'			=> 'saveContentType',
+		'/type/*/field/*/'			=> 'editContentTypeField',
+		'/type/*/field/*/save'		=> 'updateContentTypeField',
 		'/type/*/add-field'			=> 'addContentTypeField',
-		'/type/*/add-field/save'	=> 'saveContentTypeField',
+		'/type/*/add-field/save'	=> 'insertContentTypeField',
 	);
+
+
+
+	/**
+	 * 
+	 */
+	protected function deleteNode( $node )
+	{
+		is_object($node) or $node = ARONode::finder()->byPK((int)$node);
+
+		if ( empty($_GET['confirm']) ) {
+			echo '<h1>Delete node "'.$node->title.'"?</h1>';
+			exit('<p><a href="?confirm=1">CONFIRM</a> or <a href="/admin/content">cancel</a></p>');
+		}
+
+		$node->delete();
+echo $this->db->error;
+
+		$this->redirect('/admin/content');
+
+	} // END deleteNode() */
+
+
+
+	/**
+	 * 
+	 */
+	protected function updateContentTypeField( $ct, $field )
+	{
+		is_object($ct) or $ct = ARONodeType::get($ct);
+		is_object($field) or $field = $ct->getField($field);
+
+		$data = array('mandatory' => (int)!empty($_POST['mandatory']));
+		if ( isset($_POST['field_title']) && '' != trim($_POST['field_title']) ) {
+			$data['field_title'] = trim($_POST['field_title']);
+		}
+		if ( isset($_POST['input_format']) ) {
+			$data['input_format'] = $_POST['input_format'];
+		}
+
+		$this->redirect('/admin/content/type/'.$ct->node_type);
+
+	} // END updateContentTypeField() */
+
+
+	/**
+	 * 
+	 */
+	protected function editContentTypeField( $ct, $field )
+	{
+		is_object($ct) or $ct = ARONodeType::get($ct);
+		$this->tpl->assign( 'ct', $ct );
+
+		is_object($field) or $field = $ct->getField($field);
+		$this->tpl->assign( 'field', $field );
+
+		$this->tpl->display('content/edit_node_type_field.tpl.php');
+
+	} // END editContentTypeField() */
 
 
 
@@ -147,7 +209,7 @@ echo $this->db->error;
 	/**
 	 * 
 	 */
-	protected function saveContentTypeField( $ct )
+	protected function insertContentTypeField( $ct )
 	{
 		$ct = ARONodeType::get($ct);
 
@@ -189,7 +251,7 @@ echo $this->db->error;
 
 		$this->redirect('/admin/content/type/'.$ct->node_type);
 
-	} // END saveContentTypeField() */
+	} // END insertContentTypeField() */
 
 
 	/**

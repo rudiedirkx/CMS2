@@ -10,12 +10,17 @@ class ARONodeType extends ActiveRecordObject {
 	);
 
 
+	function getField( $field ) {
+		return ARONodeTypeField::finder()->findOne('field_machine_name = \''.addslashes($field).'\' AND node_type_id = '.(int)$this->id);
+	}
+
+
 	function validateNode( $input, &$errors = array() ) {
 		$output = array();
 		foreach ( $this->fields AS $field ) {
 			$name = $field->field_machine_name;
 			$output[$name] = empty($input[$name]) ? null : (string)$input[$name];
-			if ( true !== ($validity = $field->validateValue($input[$name])) ) {
+			if ( true !== ($validity = $field->validateValue( isset($input[$name]) ? $input[$name] : null )) ) {
 				$errors[$name] = $validity;
 			}
 		}

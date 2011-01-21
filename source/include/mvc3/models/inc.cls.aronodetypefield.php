@@ -22,6 +22,20 @@ class ARONodeTypeField extends ActiveRecordObject {
 		}
 		$options = $this->parseOptions($this->input_format);
 		switch ( $this->field_type ) {
+			case 'multistring':
+				if ( isset($options['options']) ) {
+					$selected = array_intersect($options['options'], (array)$value);
+					if ( $this->mandatory && !$selected ) {
+						return 'Mandatory!';
+					}
+					else if ( isset($options['min']) && (int)$options['min'][0] > count($selected) ) {
+						return 'Too few options selected';
+					}
+					else if ( isset($options['max']) && (int)$options['max'][0] < count($selected) ) {
+						return 'Too many options selected';
+					}
+				}
+			break;
 			case 'integer':
 				if ( (string)(int)$value !== (string)$value ) {
 					return 'Invalid number';

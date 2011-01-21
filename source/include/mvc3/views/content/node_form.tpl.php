@@ -15,12 +15,15 @@
 <fieldset>
 	<legend>Node content</legend>
 
-	<?foreach( $ct->fields AS $field ):?>
-		<p class="field <?=$field->field_machine_name?><?if(isset($errors[$field->field_machine_name])):?> error<?endif?>"><?=$field->field_title?> (<?=$field->field_type?>)<?if($field->mandatory):?><span class="mandatory"> *</span><?endif?><br>
+<!-- <pre><? print_r($values) ?></pre> -->
+
+	<?foreach( $ct->fields AS $field ): $name = $field->field_machine_name; ?>
+<!-- <? print_r($field) ?> -->
+		<p class="field <?=$name?><?if(isset($errors[$name])):?> error<?endif?>"><?=$field->field_title?> (<?=$field->field_type?>)<?if($field->mandatory):?><span class="mandatory"> *</span><?endif?><br>
 		<?php
-		$value = $values ? $values->{$field->field_machine_name} : '';
-		$value = is_array($value) ? implode("\n", $value) : (string)$value;
-		$htmlvalue = htmlspecialchars($value);
+		$value = $values ? $values->{$name} : '';
+//		$value = is_array($value) ? implode("\n", $value) : (string)$value;
+		$htmlvalue = htmlspecialchars(is_array($value) ? implode("\n", $value) : $value);
 		switch ( $field->field_type ):
 			case 'integer':
 			case 'float':
@@ -29,26 +32,42 @@
 			case 'time':
 			case 'dateandtime':
 				?>
-				<input type="text" name="<?=$field->field_machine_name?>" value="<?=$htmlvalue?>" />
+				<input type="text" name="<?=$name?>" value="<?=$htmlvalue?>" />
 				<?php
 			break;
 			case 'text':
 			case 'html':
-			case 'multistring':
 				?>
-				<textarea cols="60" rows="6" name="<?=$field->field_machine_name?>"><?=$htmlvalue?></textarea>
+				<textarea cols="60" rows="6" name="<?=$name?>"><?=$htmlvalue?></textarea>
 				<?php
+			break;
+			case 'multistring':
+				$options = isset($field->options['options']) ? (array)$field->options['options'] : false;
+				if ( $options ) {
+					?>
+					<select name="<?=$name?>[]"<?if( !isset($field->options['max']) || 1 < $field->options['max'] ):?> multiple size="5"<?endif?>>
+						<?foreach( $options AS $v ):?>
+							<option<?if( in_array($v, $value) ):?> selected<?endif?> value="<?=$v?>"><?=$v?></option>
+						<?endforeach?>
+					</select>
+					<?php
+				}
+				else {
+					?>
+					<textarea cols="60" rows="6" name="<?=$name?>"><?=$htmlvalue?></textarea>
+					<?php
+				}
 			break;
 			case 'file':
 			case 'image':
 				?>
-				<input type="file" name="<?=$field->field_machine_name?>" />
+				<input type="file" name="<?=$name?>" />
 				<?php
 			break;
 			case 'reference':
 				$options = ARONode::finder()->findMany('1');
 				?>
-				<select name="<?=$field->field_machine_name?>">
+				<select name="<?=$name?>">
 				<option value="0">-- Choose one --</option>
 				<?php
 				foreach ( $field->html_options AS $k => $v ) {
@@ -60,6 +79,9 @@
 			break;
 		endswitch;
 		?>
+		<?if( isset($errors[$name]) ):?>
+			<span class="errmsg"><?=$errors[$name]?></span>
+		<?endif?>
 		</p>
 
 	<?endforeach?>
